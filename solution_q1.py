@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+
 class Coord:
     def __init__(self, x, y):
         self.x = x
@@ -21,13 +22,16 @@ class Priority_Queue:
     def insert(self, node):
         index = 0
 
-        while self.queue[index].priority <= node.priority:
+        while index < len(self.queue) and self.queue[index].priority <= node.priority:
             index += 1
 
-        self.queue.insert(node, index)
+        self.queue.insert(index, node)
 
     def pop(self):
         return self.queue.pop(0).state
+
+    def empty(self):
+        return self.queue == []
 
 
 
@@ -184,8 +188,52 @@ def ucs(start_state):
     # UCS where all costs are 1 is equivalent to BFS
     return bfs(start_state)
 
+def manhattan_distance(state):
+    correct_indexes = {"_": convert_index_to_coord(0), "1": convert_index_to_coord(1), "2": convert_index_to_coord(2), "3": convert_index_to_coord(3), "4": convert_index_to_coord(4), "5": convert_index_to_coord(5), "6": convert_index_to_coord(6), "7": convert_index_to_coord(7), "8": convert_index_to_coord(8)}
+    sum = 0
+
+    for i in range(len(state.positions)):
+        cur_coord = convert_index_to_coord(i)
+        correct_coord = correct_indexes[state.positions[i]]
+
+        sum += (abs(correct_coord.x - cur_coord.x) + abs(correct_coord.y - cur_coord.y))
+
+    return sum
+
+
+def euclidian_distance(state):
+    correct_indexes = {"_": convert_index_to_coord(0), "1": convert_index_to_coord(1), "2": convert_index_to_coord(2), "3": convert_index_to_coord(3), "4": convert_index_to_coord(4), "5": convert_index_to_coord(5), "6": convert_index_to_coord(6), "7": convert_index_to_coord(7), "8": convert_index_to_coord(8)}
+    sum = 0
+
+    for i in range(len(state.positions)):
+        cur_coord = convert_index_to_coord(i)
+        correct_coord = correct_indexes[state.positions[i]]
+
+        sum += (pow(pow((correct_coord.x - cur_coord.x), 2) + pow((correct_coord.y - cur_coord.y), 2), 0.5))
+
+    return sum
+
 def a_star(start_state, heuristic):
-    return
+    pqueue = Priority_Queue();
+    pqueue.insert(Priority_Queue_Node(start_state, 0))
+    visited = []
+
+    while not pqueue.empty():
+        cur_state = pqueue.pop()
+
+        # Don't expand the state if it is None or it has already been visited
+        if cur_state != None and cur_state.positions not in visited:
+            visited.append(cur_state.positions)
+
+            if test_goal(cur_state):
+                return cur_state.prev_moves
+
+            next_states = expand_node(cur_state)
+            for state in next_states:
+                if state != None:
+                    pqueue.insert(Priority_Queue_Node(state, len(state.prev_moves) + heuristic(state)))
+
+    return None
 
 
 def print_grid(cur_state):
@@ -202,14 +250,22 @@ if __name__ == '__main__':
     # start_state = [int(tile) if tile != '_' else tile for tile in start_state]
     start_state = State(start_state, [])
 
-    print("The solution of Q1.1 is:")
+    print("The solution of Q1.1a is:")
     print(",".join(dfs(start_state)))
     print("")
 
-    print("The solution of Q1.2 is:")
+    print("The solution of Q1.1b is:")
     print(",".join(bfs(start_state)))
     print("")
 
-    print("The solution of Q1.3 is:")
+    print("The solution of Q1.1c is:")
     print(",".join(ucs(start_state)))
+    print("")
+
+    print("The solution of Q1.1d is:")
+    print(",".join(a_star(start_state, manhattan_distance)))
+    print("")
+
+    print("The solution of Q1.1e is:")
+    print(",".join(a_star(start_state, euclidian_distance)))
     print("")
