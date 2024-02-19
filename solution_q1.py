@@ -273,11 +273,11 @@ if __name__ == '__main__':
     # start_state = [int(tile) if tile != '_' else tile for tile in start_state]
     start_state = State(start_state, [])
 
-    # num_expansions = 0
-    # print("The solution of Q1.1a is:")
-    # print(",".join(dfs(start_state)))
-    # print(f"{num_expansions}")
-    # print("")
+    num_expansions = 0
+    print("The solution of Q1.1a is:")
+    print(",".join(dfs(start_state)))
+    print(f"{num_expansions}")
+    print("")
 
     num_expansions = 0
     print("The solution of Q1.1b is:")
@@ -285,11 +285,11 @@ if __name__ == '__main__':
     print(f"{num_expansions}")
     print("")
 
-    # num_expansions = 0
-    # print("The solution of Q1.1c is:")
-    # print(",".join(ucs(start_state)))
-    # print(f"{num_expansions}")
-    # print("")
+    num_expansions = 0
+    print("The solution of Q1.1c is:")
+    print(",".join(ucs(start_state)))
+    print(f"{num_expansions}")
+    print("")
 
     num_expansions = 0
     print("The solution of Q1.1d is:")

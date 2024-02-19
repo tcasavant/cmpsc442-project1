@@ -151,7 +151,7 @@ def test_goal(cur_state):
         if cur_tile != "_":
             sum += int(cur_state.positions[i])
 
-    return sum == 1
+    return sum == 11
 
 def dfs(start_state):
     stack = [start_state]
@@ -279,20 +279,25 @@ if __name__ == '__main__':
 
     print("The solution of Q1.1a is:")
     print(",".join(dfs(start_state)))
+    print(f"{num_expansions}")
     print("")
 
     print("The solution of Q1.1b is:")
     print(",".join(bfs(start_state)))
+    print(f"{num_expansions}")
     print("")
 
     print("The solution of Q1.1c is:")
     print(",".join(ucs(start_state)))
+    print(f"{num_expansions}")
     print("")
 
     print("The solution of Q1.1d is:")
     print(",".join(a_star(start_state, manhattan_distance)))
+    print(f"{num_expansions}")
     print("")
 
     print("The solution of Q1.1e is:")
     print(",".join(a_star(start_state, euclidian_distance)))
+    print(f"{num_expansions}")
     print("")
