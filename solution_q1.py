@@ -130,6 +130,8 @@ def swap_down(cur_state, index):
 
 
 def expand_node(cur_state):
+    global num_expansions
+    num_expansions += 1
     for i in range(len(cur_state.positions)):
         if cur_state.positions[i] == "_":
             blank_index = i
@@ -185,8 +187,26 @@ def bfs(start_state):
     return None
 
 def ucs(start_state):
-    # UCS where all costs are 1 is equivalent to BFS
-    return bfs(start_state)
+    pqueue = Priority_Queue();
+    pqueue.insert(Priority_Queue_Node(start_state, 0))
+    visited = []
+
+    while not pqueue.empty():
+        cur_state = pqueue.pop()
+
+        # Don't expand the state if it is None or it has already been visited
+        if cur_state != None and cur_state.positions not in visited:
+            visited.append(cur_state.positions)
+
+            if test_goal(cur_state):
+                return cur_state.prev_moves
+
+            next_states = expand_node(cur_state)
+            for state in next_states:
+                if state != None:
+                    pqueue.insert(Priority_Queue_Node(state, 1))
+
+    return None
 
 def manhattan_distance(state):
     correct_indexes = {"_": convert_index_to_coord(0), "1": convert_index_to_coord(1), "2": convert_index_to_coord(2), "3": convert_index_to_coord(3), "4": convert_index_to_coord(4), "5": convert_index_to_coord(5), "6": convert_index_to_coord(6), "7": convert_index_to_coord(7), "8": convert_index_to_coord(8)}
@@ -244,28 +264,41 @@ def print_grid(cur_state):
     print(f"{cur_state.prev_moves}\n")
 
 
+
 if __name__ == '__main__':
+    global num_expansions
+
     input = open("input.txt", "r")
     start_state = input.read().strip().split(",")
     # start_state = [int(tile) if tile != '_' else tile for tile in start_state]
     start_state = State(start_state, [])
 
-    print("The solution of Q1.1a is:")
-    print(",".join(dfs(start_state)))
-    print("")
+    # num_expansions = 0
+    # print("The solution of Q1.1a is:")
+    # print(",".join(dfs(start_state)))
+    # print(f"{num_expansions}")
+    # print("")
 
+    num_expansions = 0
     print("The solution of Q1.1b is:")
     print(",".join(bfs(start_state)))
+    print(f"{num_expansions}")
     print("")
 
-    print("The solution of Q1.1c is:")
-    print(",".join(ucs(start_state)))
-    print("")
+    # num_expansions = 0
+    # print("The solution of Q1.1c is:")
+    # print(",".join(ucs(start_state)))
+    # print(f"{num_expansions}")
+    # print("")
 
+    num_expansions = 0
     print("The solution of Q1.1d is:")
     print(",".join(a_star(start_state, manhattan_distance)))
+    print(f"{num_expansions}")
     print("")
 
+    num_expansions = 0
     print("The solution of Q1.1e is:")
     print(",".join(a_star(start_state, euclidian_distance)))
+    print(f"{num_expansions}")
     print("")
